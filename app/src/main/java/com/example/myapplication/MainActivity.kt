@@ -16,6 +16,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 
 import androidx.compose.material3.Scaffold
@@ -81,6 +83,11 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
         setPosts(posts.filter { it != post })
     }
 
+    fun handleAddPost() {
+        val newPost = Post(title = "title 2", author = "author", content = "content")
+        setPosts(posts + newPost)
+    }
+
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -88,8 +95,23 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
     ) {
 
         Column {
-            for (post in posts) {
-                PostItem(post = post, onDeleteClick = { handlePostDelete(post) })
+
+            Button(
+                onClick = { handleAddPost() },
+                modifier = Modifier
+                    .height(50.dp) // Adjust the size as needed
+                    .padding(0.dp, 6.dp),
+            ) {
+                Text(
+                    text = "Add",
+                    fontSize = 12.sp // Adjust the font size as needed
+                )
+            }
+
+            LazyColumn {
+                items(posts) { post ->
+                    PostItem(post = post, onDeleteClick = { handlePostDelete(post) })
+                }
             }
         }
 
@@ -102,7 +124,7 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
         Column(
             modifier = Modifier
                 .padding(8.dp)
-                .background(Color.LightGray)
+                .background(Color.Gray)
                 .fillMaxWidth()
                 .padding(10.dp)
         ) {
@@ -119,7 +141,8 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
 
                 Button(
                     onClick = onDeleteClick,
-                    modifier = Modifier.height(50.dp) // Adjust the size as needed
+                    modifier = Modifier
+                        .height(50.dp) // Adjust the size as needed
                         .padding(0.dp, 6.dp),
                 ) {
                     Text(
