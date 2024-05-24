@@ -1,9 +1,15 @@
 package com.example.myapplication
 
+import android.app.Fragment
 import android.os.Bundle
+import android.provider.CalendarContract.Colors
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -18,9 +24,11 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 
 import androidx.compose.runtime.Composable
@@ -28,6 +36,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.motionEventSpy
 import androidx.compose.ui.text.font.FontWeight
@@ -64,18 +75,15 @@ data class Post(
 )
 
 
-
-
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {
-
     val (posts, setPosts) = remember { mutableStateOf(
         listOf(
             Post("First Post", "John Doe", "This is the content of the first post."),
-            Post("Second Post", "Jane Smith", "This is the content of the second post."),
-            Post("Third Post", "Alice", "This is the content of the third post."),
-            Post("Fourth Post", "Bob", "This is the content of the fourth post."),
-            Post("Fifth Post", "Charlie", "This is the content of the fifth post.")
+//            Post("Second Post", "Jane Smith", "This is the content of the second post."),
+//            Post("Third Post", "Alice", "This is the content of the third post."),
+//            Post("Fourth Post", "Bob", "This is the content of the fourth post."),
+//            Post("Fifth Post", "Charlie", "This is the content of the fifth post.")
         )
     )}
 
@@ -116,51 +124,105 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
         }
 
 
+        FloatingApp(modifier)
+
+
     }
 }
+val linearGradient = Brush.linearGradient(
+    colors = listOf(
+        Color(0xFF6586F0), // Start color
+        Color(0xFF95A4F5), // Center color
+        Color(0xFFFFB878)  // End color
+    ),
+    start = Offset.Zero,
+    end = Offset.Infinite
+)
+@Composable
+fun PostItem(post: Post, onDeleteClick: () -> Unit) {
+    Column(
+        modifier = Modifier
+            .padding(8.dp)
+            .background(
+                brush = linearGradient,
+                shape = RoundedCornerShape(16.dp)
+            )
+            .fillMaxWidth()
+            .padding(10.dp)
+    ) {
 
-    @Composable
-    fun PostItem(post: Post, onDeleteClick: () -> Unit) {
+        Row(modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+            ){
+            Text(
+                text = post.title,
+                fontWeight = FontWeight.Bold,
+                fontSize = 20.sp // Adjust the font size as needed
+            )
+
+            Button(
+                onClick = onDeleteClick,
+                modifier = Modifier
+                    .height(50.dp) // Adjust the size as needed
+                    .padding(0.dp, 6.dp),
+            ) {
+                Text(
+                    text = "Delete",
+                    fontSize = 12.sp // Adjust the font size as needed
+                )
+            }
+        }
+        post.author?.let {
+            Text(text = "Author: $it")
+        }
+        post.content?.let {
+            Text(text = it)
+        }
+
+    }
+}
+@Composable
+fun FloatingApp(modifier:  Modifier) {
+    Surface(
+        modifier = Modifier
+            .padding(8.dp)
+            .fillMaxWidth()
+            .padding(10.dp)
+            .clip(RoundedCornerShape(10.dp))
+//            .elevation(8.dp) // Set the elevation to make it appear floating
+    ) {
         Column(
             modifier = Modifier
-                .padding(8.dp)
-                .background(Color.Gray)
-                .fillMaxWidth()
-                .padding(10.dp)
-        ) {
-
-            Row(modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-                ){
-                Text(
-                    text = post.title,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 20.sp // Adjust the font size as needed
+                .background(
+                    brush = linearGradient
                 )
-
-                Button(
-                    onClick = onDeleteClick,
-                    modifier = Modifier
-                        .height(50.dp) // Adjust the size as needed
-                        .padding(0.dp, 6.dp),
-                ) {
-                    Text(
-                        text = "Delete",
-                        fontSize = 12.sp // Adjust the font size as needed
-                    )
-                }
-            }
-            post.author?.let {
-                Text(text = "Author: $it")
-            }
-            post.content?.let {
-                Text(text = it)
-            }
-
+                .padding(8.dp)
+        ) {
+            // Your column content here
+            Text(text = "hisdflksd klsdjf")
         }
     }
 
+}
+
+class Screen1Fragment : Fragment() {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return inflater.inflate(R.layout.fragment_screen1, container, false)
+    }
+}
+
+class Screen2Fragment : Fragment() {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return inflater.inflate(R.layout.fragment_screen2, container, false)
+    }
+}
 
 @Preview(showBackground = true)
 @Composable
