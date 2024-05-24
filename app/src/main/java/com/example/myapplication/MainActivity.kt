@@ -52,6 +52,7 @@ import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.myapplication.ui.theme.MyApplicationTheme
+import java.time.LocalDateTime
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -93,44 +94,47 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
 
     var showDialog by remember { mutableStateOf(false) }
 
-    fun handlePostDelete(post: Post) {
-        setPosts(posts.filter { it != post })
+    fun handlePostDelete(title: String) {
+        setPosts(posts.filter { it.title != title })
     }
 
     fun handleAddPost() {
-        val newPost = Post(title = "title 2", author = "author", content = "content")
+        val timestamp = LocalDateTime.now().toString()
+        val newPost = Post(title = "Title $timestamp", author = "author", content = "content")
         setPosts(posts + newPost)
     }
 
-    Row(
+    Column(
         modifier = modifier
             .fillMaxWidth()
             .background(Color.White)
     ) {
 
+        Button(
+            onClick = { handleAddPost() },
+            modifier = Modifier
+                .height(50.dp) // Adjust the size as needed
+                .padding(0.dp, 6.dp),
+        ) {
+            Text(
+                text = "Add",
+                fontSize = 12.sp // Adjust the font size as needed
+            )
+        }
+
+
         Column {
 
-            Button(
-                onClick = { handleAddPost() },
-                modifier = Modifier
-                    .height(50.dp) // Adjust the size as needed
-                    .padding(0.dp, 6.dp),
-            ) {
-                Text(
-                    text = "Add",
-                    fontSize = 12.sp // Adjust the font size as needed
-                )
-            }
 
             LazyColumn {
                 items(posts) { post ->
-                    PostItem(post = post, onDeleteClick = { handlePostDelete(post) })
+                    PostItem(post = post, onDeleteClick = { handlePostDelete(post.title) })
                 }
             }
         }
 
 
-//        FloatingApp(modifier)
+        FloatingApp(modifier)
 
 
         Button(
@@ -171,8 +175,6 @@ fun CustomDialog(
 
                 Column {
                     Text(text = "Dialog Message")
-
-
 
                     Spacer(modifier = Modifier.height(16.dp))
                     Row(
