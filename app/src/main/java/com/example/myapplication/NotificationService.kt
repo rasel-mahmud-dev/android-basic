@@ -7,11 +7,11 @@ import android.content.Context
 
 
 
-class MyApp : Application() {
+class NotificationService : Application() {
     override fun onCreate() {
         super.onCreate()
         val channel = NotificationChannel(
-            "channel_id",
+            "running_channel",
             "Channel Name",
             NotificationManager.IMPORTANCE_HIGH
         )

@@ -7,13 +7,12 @@
         android:required="false" />
 
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.CAMERA" />
 
-
     <application
-        android:name=".MyApp"
+        android:name=".NotificationService"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -25,11 +24,10 @@
         tools:targetApi="33">
 
         <!-- register the service -->
-<!--        <service-->
-<!--            android:name=".ForegroundService"-->
-<!--            android:enabled="true"-->
-<!--            android:exported="true"/>-->
-
+        <!-- <service -->
+        <!-- android:name=".ForegroundService" -->
+        <!-- android:enabled="true" -->
+        <!-- android:exported="true"/> -->
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -37,10 +35,11 @@
             android:theme="@style/Theme.MyApplication">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
+        <service android:name=".RunningService" />
     </application>
 
 </manifest>
