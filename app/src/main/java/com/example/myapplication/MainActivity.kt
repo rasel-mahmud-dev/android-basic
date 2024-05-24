@@ -1,136 +1,83 @@
 package com.example.myapplication
 
+import android.app.NotificationManager
+import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.provider.Settings
+
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
+
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
+import androidx.compose.ui.unit.sp
+import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat
+
 import com.example.myapplication.ui.theme.MyApplicationTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        val isOk = checkOverlayPermission()
+        println("Permitted: $isOk")
+
         setContent {
             MyApplicationTheme {
-                val navController = rememberNavController()
-                NavHost(
-                    navController = navController,
-                    startDestination = "screen1"
-                ) {
-                    composable("screen1") { entry ->
-//                        val text = entry.savedStateHandle.get<String>("my_text")
-                        Greeting(navController)
-                    }
-                    composable("login") {
-                        Login(navController)
-                    }
-                    composable("registration") {
-                        Registration(navController)
-                    }
+
+                Button(onClick = {
+                    showNotification()
+                }, Modifier.padding(30.dp)) {
+                    Text(text = "Show notification")
                 }
             }
         }
     }
-}
 
-@Composable
-fun Greeting(navController: NavHostController) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .fillMaxHeight()
-            .background(Color.Gray)
-    ) {
-
-
-        Spacer(modifier = Modifier.padding(100.dp))
-        Text(text = "Home Page")
-        Button(onClick = {
-            navController.navigate("login") {
-                popUpTo("login") {
-                    inclusive = true
-                }
-            }
-        }) {
-            Text(text = "Go to Login")
-
+    private fun checkOverlayPermission(): Boolean {
+        if (!Settings.canDrawOverlays(this)) {
+            val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION)
+            startActivity(intent)
+            return false
+        } else {
+            return true
         }
-
     }
 
-}
-
-@Composable
-fun Login(navController: NavHostController) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .fillMaxHeight()
-            .background(Color.Gray)
-    ) {
-
-
-        Spacer(modifier = Modifier.padding(100.dp))
-        Text(text = "Login Page")
-
-        Row{
-            Button(onClick = {
-                navController.navigate("screen1")
-            }) {
-                Text(text = "Go to Home")
-            }
-
-            Button(onClick = {
-                navController.navigate("registration")
-            }) {
-                Text(text = "Go to Registration")
-            }
-        }
-
+    private fun showNotification() {
+        val notification = NotificationCompat.Builder(applicationContext, "channel_id")
+            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setContentTitle("Hello world")
+            .setContentText("This is a description")
+            .build()
+        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.notify(1, notification)
     }
-
 }
 
 
-@Composable
-fun Registration(navController: NavHostController) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .fillMaxHeight()
-            .background(Color.Gray)
-    ) {
 
 
-        Spacer(modifier = Modifier.padding(100.dp))
-        Text(text = "Registration Page")
-
-        Row{
-            Button(onClick = {
-                navController.navigate("screen1")
-            }) {
-                Text(text = "Go to Home")
-            }
-
-        }
-
-    }
-
-}
