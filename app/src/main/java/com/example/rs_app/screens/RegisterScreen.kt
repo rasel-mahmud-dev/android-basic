@@ -76,7 +76,21 @@ fun RegisterScreen(navController: NavHostController) {
             },
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Register")
+            Text("Submit")
+        }
+
+        Button(
+            onClick = { navController.navigate("login") },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Login")
+        }
+
+        Button(
+            onClick = { navController.navigate("home") },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Home")
         }
     }
 }

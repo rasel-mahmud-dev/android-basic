@@ -14,24 +14,31 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
-import coil.compose.rememberImagePainter
 import coil.request.ImageRequest
+import com.example.rs_app.AuthPreferences
+import com.example.rs_app.GlobalAuthState
 
 @Composable
 fun HomeScreen(navController: NavHostController) {
-    var auth by remember { mutableStateOf<Auth?>(null) }
-    var topSpace by remember { mutableIntStateOf(0) }
+    var authUser = GlobalAuthState.authUser
+
+    val context = LocalContext.current
+
 
     fun handleLogout() {
-        auth = null
-        // remove user from async storage
+        GlobalAuthState.authUser = null
+        AuthPreferences.clearAuthUser(context)
     }
 
     fun sayHiAll() {
         // Call your API
+
+        println(authUser)
     }
 
-    Box(modifier = Modifier.fillMaxSize().background(Color(0xFFE0E0E0))) {
+    Box(modifier = Modifier
+        .fillMaxSize()
+        .background(Color(0xFFE0E0E0))) {
         Column(
             modifier = Modifier
                 .background(
@@ -45,42 +52,47 @@ fun HomeScreen(navController: NavHostController) {
                 )
                 .padding(horizontal = 10.dp, vertical = 20.dp)
                 .fillMaxWidth()
-                .height(250.dp)
+//                .height(250.dp)
 //                .clip(shape = RoundedCornerShape(bottomEnd = 20.dp, bottomStart = 20.dp))
         ) {
-            if (auth != null) {
+
+
+            if (authUser != null) {
+
                 Column(
                     horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-//                    AsyncImage()
                     Image(
-                        painter = rememberAsyncImagePainter(auth!!.avatar),
-                        contentDescription = null,
+                        painter = rememberAsyncImagePainter(
+                            ImageRequest.Builder(LocalContext.current)
+                                .data(data = "https://rasel-portfolio.vercel.app/images/rasel-mahmud-dev.webp")
+                                .apply(block = fun ImageRequest.Builder.() {
+                                    crossfade(true)
+                                }).build()
+                        ),
+                        contentDescription = "Avatar Image",
                         modifier = Modifier
-                            .size(50.dp)
-                            .clip(CircleShape)
+                            .padding(16.dp)
+                            .width(160.dp)
+                            .height(160.dp)
+                            .clip(CircleShape),
+
+                        contentScale = ContentScale.Crop
                     )
-                    Text(auth!!.username)
-                    Text(auth!!.phone)
-                    Text(
-                        text = "Update",
-                        color = Color.Blue,
-                        modifier = Modifier.clickable {
-                            // Handle update profile navigation
-                        }
-                    )
-                }
-            } else {
-                Text(
-                    text = "Login",
-                    color = Color.Blue,
-                    modifier = Modifier.clickable {
-                        // Handle login navigation
-                        navController.navigate("login")
+                    Text(authUser!!.username)
+                    Text(authUser!!.avatar)
+                    Button(onClick = { navController.navigate("update-profile") }) {
+                        Text("Update")
                     }
 
-                )
+                }
+            } else {
+
+                Button(onClick = { navController.navigate("login") }) {
+                    Text("Login Page")
+                }
+
             }
 
             Button(onClick = { sayHiAll() }) {
@@ -96,26 +108,6 @@ fun HomeScreen(navController: NavHostController) {
 
             // Replace BarChart2 with your actual chart composable
             BarChart2()
-        }
-
-        Box(modifier = Modifier){
-            Image(
-                painter = rememberAsyncImagePainter(
-                    ImageRequest.Builder(LocalContext.current)
-                        .data(data = "https://rasel-portfolio.vercel.app/images/rasel-mahmud-dev.webp")
-                        .apply(block = fun ImageRequest.Builder.() {
-                            crossfade(true)
-                        }).build()
-                ),
-                contentDescription = "Avatar Image",
-                modifier = Modifier
-                    .padding(16.dp)
-                    .width(160.dp)
-                    .height(160.dp)
-                    .clip(CircleShape),
-
-                contentScale = ContentScale.Crop
-            )
         }
 
 

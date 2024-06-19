@@ -1,4 +1,4 @@
-package com.example.rs_app.screens
+package com.example.rs_app.components
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background

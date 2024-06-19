@@ -2,6 +2,7 @@ package com.example.rs_app
 
 import HomeScreen
 import RegisterScreen
+import UpdateProfileScreen
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -33,9 +34,9 @@ class MainActivity : ComponentActivity() {
                 LoadAuthInfo()
                 NavHost(
                     navController = navController,
-                    startDestination = "screen1"
+                    startDestination = "home"
                 ) {
-                    composable("screen1") { entry ->
+                    composable("home") { entry ->
 //                        val text = entry.savedStateHandle.get<String>("my_text")
                         HomeScreen(navController)
                     }
@@ -44,6 +45,10 @@ class MainActivity : ComponentActivity() {
                     }
                     composable("registration") {
                         RegisterScreen(navController)
+                    }
+
+                    composable("update-profile") {
+                        UpdateProfileScreen(navController)
                     }
                 }
 

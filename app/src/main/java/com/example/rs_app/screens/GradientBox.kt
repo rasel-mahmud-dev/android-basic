@@ -12,19 +12,22 @@ import androidx.compose.ui.unit.dp
 
 
 @Composable
-fun GradientBox() {
+fun GradientBox(content: @Composable () -> Unit, modifier: Modifier, colors: List<Color>) {
     Box(
-        modifier = Modifier
+        modifier
             .height(200.dp)
             .fillMaxWidth()
             .background(
                 brush = Brush.linearGradient(
-                    colors = listOf(
-                        Color(android.graphics.Color.parseColor("#FF0000")), // Red
-                        Color(android.graphics.Color.parseColor("#0000FF"))  // Blue
-                    )
+                    colors = colors
+//                    colors = listOf(
+//                        Color(android.graphics.Color.parseColor(colors.toString())), // Red
+//                        Color(android.graphics.Color.parseColor(colors.toString()))  // Blue
+//                    )
                 )
             )
-    )
+    ) {
+        content()
+    }
 }
 
