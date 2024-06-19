@@ -3,6 +3,7 @@ package com.example.rs_app
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import generateShortUuid
 import kotlinx.coroutines.tasks.await
 
 data class UserModel(
@@ -11,6 +12,7 @@ data class UserModel(
     val password: String? = null,
     val avatar: String = "",
     val username: String = "",
+    val id: String = generateShortUuid(),
     val createdAt: Long = System.currentTimeMillis()
 ) {
     companion object {
@@ -100,7 +102,7 @@ data class UserModel(
             val existingUser = findByEmail(this.email)
             if (existingUser != null) throw Exception("User already exists")
 
-            val userRef = db.collection(COLLECTION_NAME).document(this.email)
+            val userRef = db.collection(COLLECTION_NAME).document(this.id)
             userRef.set(this).await()
             this
         } catch (e: Exception) {

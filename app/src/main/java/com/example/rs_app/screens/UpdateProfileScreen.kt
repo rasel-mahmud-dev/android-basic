@@ -1,19 +1,10 @@
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.Button
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -37,7 +28,7 @@ data class FormState(
 )
 
 @Composable
-fun UpdateProfileScreen(navController: NavHostController) {
+fun UpdateProfileScreen(navController: NavHostController, userId: String) {
 
     var formState by remember { mutableStateOf(FormState()) }
 
@@ -59,6 +50,30 @@ fun UpdateProfileScreen(navController: NavHostController) {
             println("User added successfully")
         } catch (e: Exception) {
             println("Error adding user: ${e.message}")
+        }
+    }
+
+
+    LaunchedEffect(Unit) {
+        coroutineScope.launch {
+            // Fetch initial data here (e.g., user information from the database)
+//            val initialData = // your code to fetch data
+            try {
+                val result = UserModel.findAll()
+                println(result)
+            } catch (e: Exception) {
+                println("Error adding user: ${e.message}")
+            }
+
+//
+//                // Update formState with the fetched data
+//                formState = formState.copy(
+//                    email = initialData.email,
+//                    username = initialData.username,
+//                    phone = initialData.phone,
+//                    avatar = initialData.avatar
+//                )
+
         }
     }
 

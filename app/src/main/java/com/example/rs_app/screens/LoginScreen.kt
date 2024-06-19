@@ -1,5 +1,6 @@
 package com.example.rs_app.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -79,8 +80,10 @@ fun LoginScreen(navController: NavHostController) {
             }
 
         } catch (e: Exception) {
-            print(e)
-//            _loginStatus.value = "Login failed: ${e.message}"
+            coroutineScope.launch {
+                Toast.makeText(context, e.message.toString(), Toast.LENGTH_SHORT)
+                    .show()
+            }
         }
     }
 

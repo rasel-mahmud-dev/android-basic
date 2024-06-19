@@ -13,9 +13,11 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.rs_app.screens.LoginScreen
 import com.example.rs_app.ui.theme.RsAppTheme
 import com.google.firebase.FirebaseApp
@@ -47,9 +49,22 @@ class MainActivity : ComponentActivity() {
                         RegisterScreen(navController)
                     }
 
-                    composable("update-profile") {
-                        UpdateProfileScreen(navController)
+
+                    composable(
+                        route = "update-profile/{userId}",
+                        arguments = listOf(
+                            navArgument("userId") { type = NavType.StringType },
+                        )
+                    ) { entry ->
+                        UpdateProfileScreen(
+                            navController = navController,
+                            userId = entry.arguments?.getString("userId") ?: ""
+                        )
                     }
+
+//                    composable("update-profile") {
+//                        UpdateProfileScreen(navController)
+//                    }
                 }
 
             }
@@ -72,7 +87,6 @@ fun GreetingPreview() {
         Greeting("H")
     }
 }
-
 
 
 @Composable

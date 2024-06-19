@@ -1,6 +1,5 @@
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.*
@@ -36,9 +35,11 @@ fun HomeScreen(navController: NavHostController) {
         println(authUser)
     }
 
-    Box(modifier = Modifier
-        .fillMaxSize()
-        .background(Color(0xFFE0E0E0))) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xFFE0E0E0))
+    ) {
         Column(
             modifier = Modifier
                 .background(
@@ -80,10 +81,14 @@ fun HomeScreen(navController: NavHostController) {
 
                         contentScale = ContentScale.Crop
                     )
-                    Text(authUser!!.username)
-                    Text(authUser!!.avatar)
-                    Button(onClick = { navController.navigate("update-profile") }) {
+                    Text(authUser.username)
+                    Text(authUser.avatar)
+                    Button(onClick = { navController.navigate("update-profile/${authUser.id}") }) {
                         Text("Update")
+                    }
+
+                    Button(onClick = { handleLogout() }) {
+                        Text("Logout")
                     }
 
                 }
