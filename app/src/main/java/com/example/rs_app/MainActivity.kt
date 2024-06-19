@@ -30,6 +30,8 @@ import com.google.firebase.FirebaseApp
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import android.provider.Settings
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.ui.unit.dp
@@ -57,6 +59,29 @@ class MainActivity : ComponentActivity() {
             RsAppTheme {
                 val navController = rememberNavController()
                 LoadAuthInfo()
+
+
+                Column {
+                    Row {
+                        Button(onClick = {
+                            Intent(applicationContext, RunningService::class.java).also {
+                                it.action = RunningService.Actions.START.toString()
+                                startService(it)
+                            }
+                        }) {
+                            Text(text = "Start service")
+                        }
+
+                        Button(onClick = {
+                            Intent(applicationContext, RunningService::class.java).also {
+                                it.action = RunningService.Actions.STOP.toString()
+                                stopService(it)
+                            }
+                        }) {
+                            Text(text = "STOP service")
+                        }
+                    }
+                }
 
                 NavHost(
                     navController = navController,
@@ -89,6 +114,8 @@ class MainActivity : ComponentActivity() {
                             userId = entry.arguments?.getString("userId") ?: ""
                         )
                     }
+
+
                 }
             }
         }
