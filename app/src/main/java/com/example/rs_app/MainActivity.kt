@@ -1,8 +1,12 @@
 package com.example.rs_app
 
+import App
 import HomeScreen
 import RegisterScreen
 import UpdateProfileScreen
+import android.app.NotificationManager
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -19,21 +23,41 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.rs_app.screens.LoginScreen
+import com.example.rs_app.screens.MessagesScreen
+
 import com.example.rs_app.ui.theme.RsAppTheme
 import com.google.firebase.FirebaseApp
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import android.provider.Settings
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
+import androidx.compose.ui.unit.dp
+import androidx.core.app.NotificationCompat
+import com.example.rs_app.utils.NotificationUtil
+
 
 class MainActivity : ComponentActivity() {
+
+    private lateinit var app: App
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        enableEdgeToEdge()
+//        val isOk = checkOverlayPermission()
+//        println("Permitted: $isOk")
+
+
         FirebaseApp.initializeApp(this)
+        app = App(applicationContext)
 
         enableEdgeToEdge()
         setContent {
             RsAppTheme {
                 val navController = rememberNavController()
                 LoadAuthInfo()
+
                 NavHost(
                     navController = navController,
                     startDestination = "home"
@@ -49,6 +73,10 @@ class MainActivity : ComponentActivity() {
                         RegisterScreen(navController)
                     }
 
+                    composable("messages") {
+                        MessagesScreen(navController, applicationContext)
+                    }
+
 
                     composable(
                         route = "update-profile/{userId}",
@@ -61,15 +89,27 @@ class MainActivity : ComponentActivity() {
                             userId = entry.arguments?.getString("userId") ?: ""
                         )
                     }
-
-//                    composable("update-profile") {
-//                        UpdateProfileScreen(navController)
-//                    }
                 }
-
             }
         }
     }
+
+
+    override fun onDestroy() {
+        super.onDestroy()
+        app.clear()
+    }
+
+    private fun checkOverlayPermission(): Boolean {
+        if (!Settings.canDrawOverlays(this)) {
+            val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION)
+            startActivity(intent)
+            return false
+        } else {
+            return true
+        }
+    }
+
 }
 
 @Composable

@@ -1,6 +1,8 @@
 [versions]
+activityComposeVersion = "1.4.0"
 agp = "8.4.1"
 coilCompose = "2.4.0"
+coilComposeVersion = "2.0.0"
 firebaseBom = "33.1.0"
 gson = "2.11.0"
 kotlin = "1.9.0"
@@ -18,8 +20,12 @@ firebaseFirestoreKtx = "25.0.0"
 firebaseAuthKtx = "23.0.0"
 
 [libraries]
+androidx-activity-compose-v140 = { module = "androidx.activity:activity-compose", version.ref = "activityComposeVersion" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-material-icons-extended = { module = "androidx.compose.material:material-icons-extended" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
+coil-compose-v200 = { module = "io.coil-kt:coil-compose", version.ref = "coilComposeVersion" }
+cropify = { module = "com.github.MoyuruAizawa:Cropify" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
 firebase-firestore = { module = "com.google.firebase:firebase-firestore" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
@@ -41,6 +47,8 @@ androidx-navigation-runtime-ktx = { group = "androidx.navigation", name = "navig
 firebase-common-ktx = { group = "com.google.firebase", name = "firebase-common-ktx", version.ref = "firebaseCommonKtx" }
 firebase-firestore-ktx = { group = "com.google.firebase", name = "firebase-firestore-ktx", version.ref = "firebaseFirestoreKtx" }
 firebase-auth-ktx = { group = "com.google.firebase", name = "firebase-auth-ktx", version.ref = "firebaseAuthKtx" }
+moyuruaizawa-cropify = { module = "com.github.moyuruaizawa:cropify" }
+ucrop = { module = "com.github.yalantis:ucrop" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

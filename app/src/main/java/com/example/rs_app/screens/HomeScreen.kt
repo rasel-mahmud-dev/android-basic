@@ -1,3 +1,4 @@
+import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -16,6 +17,8 @@ import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.example.rs_app.AuthPreferences
 import com.example.rs_app.GlobalAuthState
+import com.example.rs_app.utils.NotificationUtil
+
 
 @Composable
 fun HomeScreen(navController: NavHostController) {
@@ -67,7 +70,7 @@ fun HomeScreen(navController: NavHostController) {
                     Image(
                         painter = rememberAsyncImagePainter(
                             ImageRequest.Builder(LocalContext.current)
-                                .data(data = "https://rasel-portfolio.vercel.app/images/rasel-mahmud-dev.webp")
+                                .data(data = authUser.avatar)
                                 .apply(block = fun ImageRequest.Builder.() {
                                     crossfade(true)
                                 }).build()
@@ -82,8 +85,11 @@ fun HomeScreen(navController: NavHostController) {
                         contentScale = ContentScale.Crop
                     )
                     Text(authUser.username)
-                    Text(authUser.avatar)
-                    Button(onClick = { navController.navigate("update-profile/${authUser.id}") }) {
+                    Text(authUser.id)
+                    Button(onClick = {
+                        println(authUser)
+                        navController.navigate("update-profile/${authUser.id}")
+                    }) {
                         Text("Update")
                     }
 
@@ -102,6 +108,17 @@ fun HomeScreen(navController: NavHostController) {
 
             Button(onClick = { sayHiAll() }) {
                 Text("Say Hi All")
+            }
+
+            Button(onClick = { navController.navigate("messages") }) {
+                Text("MEssage")
+            }
+
+            Button(onClick = {
+                NotificationUtil.showNotification(context, "sdfj", "sdkuofsdfudskfj dsjkf hdss")
+
+            }) {
+                Text("Show Not")
             }
         }
 

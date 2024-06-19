@@ -1,7 +1,6 @@
 package com.example.rs_app.screens
 
 import android.widget.Toast
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,7 +11,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -24,7 +22,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
@@ -68,7 +65,8 @@ fun LoginScreen(navController: NavHostController) {
                 val authUser = AuthUser(
                     email = user.email,
                     username = user.username,
-                    avatar = user.avatar
+                    avatar = user.avatar,
+                    id = user.id
                 )
                 GlobalAuthState.authUser = authUser
                 AuthPreferences.saveAuthUser(context, authUser)
@@ -136,7 +134,7 @@ fun LoginScreen(navController: NavHostController) {
             modifier = Modifier.fillMaxWidth()
         ) {
             Button(onClick = {
-                navController.navigate("screen1")
+                navController.navigate("home")
             }) {
                 Text(text = "Go to Home")
             }

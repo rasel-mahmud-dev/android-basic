@@ -1,21 +1,34 @@
+import android.net.Uri
+import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AddPhotoAlternate
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.rs_app.AuthPreferences
+import com.example.rs_app.AuthUser
+import com.example.rs_app.GlobalAuthState
 import com.example.rs_app.UserModel
 import com.example.rs_app.components.CustomTextField
 import com.example.rs_app.screens.GradientBox
+
 import kotlinx.coroutines.launch
 
 
@@ -44,38 +57,67 @@ fun UpdateProfileScreen(navController: NavHostController, userId: String) {
     }
 
     val coroutineScope = rememberCoroutineScope()
-    suspend fun insertUser(user: UserModel) {
-        try {
-            user.save()
-            println("User added successfully")
-        } catch (e: Exception) {
-            println("Error adding user: ${e.message}")
-        }
-    }
 
 
     LaunchedEffect(Unit) {
         coroutineScope.launch {
-            // Fetch initial data here (e.g., user information from the database)
-//            val initialData = // your code to fetch data
             try {
-                val result = UserModel.findAll()
-                println(result)
+                val result = UserModel.findById(userId)
+                if (result != null) {
+                    formState = formState.copy(
+                        email = result.email,
+                        phone = result.phone,
+                        avatar = result.avatar,
+                        username = result.username,
+//                        password = result.password,
+                    )
+                }
             } catch (e: Exception) {
                 println("Error adding user: ${e.message}")
             }
-
-//
-//                // Update formState with the fetched data
-//                formState = formState.copy(
-//                    email = initialData.email,
-//                    username = initialData.username,
-//                    phone = initialData.phone,
-//                    avatar = initialData.avatar
-//                )
-
         }
     }
+
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        println(uri)
+//        selectedImageUri = uri
+    }
+
+    val context = LocalContext.current
+    suspend fun handleUpdateUser() {
+        try {
+            val user = UserModel.update(
+                userId, mapOf(
+                    "email" to formState.email,
+                    "phone" to formState.phone,
+                    "password" to formState.password,
+                    "avatar" to formState.avatar,
+                    "username" to formState.username
+                )
+            )
+
+            if (user != null) {
+                Toast.makeText(context, "User update successfully", Toast.LENGTH_SHORT).show()
+                val a = AuthUser(
+                    email = user.email,
+                    id = user.id,
+                    username = user.username,
+//                    phone = user.phone,
+                    avatar = user.avatar,
+                )
+                GlobalAuthState.authUser = a
+                AuthPreferences.saveAuthUser(context, a)
+            }
+        } catch (e: Exception) {
+            coroutineScope.launch {
+                Toast.makeText(context, e.message.toString(), Toast.LENGTH_SHORT)
+                    .show()
+            }
+        }
+    }
+
 
     Column {
         GradientBox(
@@ -133,6 +175,20 @@ fun UpdateProfileScreen(navController: NavHostController, userId: String) {
                 onValueChange = { name, value -> handleChangeValue(name, value) }
             )
 
+            Button(onClick = { launcher.launch("image/*") },
+                content = {
+                    Icon(
+                        imageVector = Icons.Default.AddPhotoAlternate,
+                        contentDescription = "Pick a Photo",
+                        modifier = Modifier.width(20.dp)
+                    )
+
+                    Text("Pick a Photo")
+                })
+
+//            PhotoPickerScreen()
+
+
             CustomTextField(
                 value = formState.avatar,
                 label = "avatar",
@@ -144,16 +200,9 @@ fun UpdateProfileScreen(navController: NavHostController, userId: String) {
 
             Button(
                 onClick = {
-//                    val newUser = UserModel(
-//                        email = email,
-//                        phone = phone,
-//                        password = password,
-//                        avatar = avatar,
-//                        username = username
-//                    )
-//                    coroutineScope.launch {
-//                        insertUser(newUser)
-//                    }
+                    coroutineScope.launch {
+                        handleUpdateUser()
+                    }
                 },
                 modifier = Modifier.fillMaxWidth()
             ) {

@@ -75,6 +75,9 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation(libs.coil.compose)
+    implementation(libs.androidx.activity.compose)
+
+    implementation(libs.androidx.material.icons.extended)
 
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.firestore)

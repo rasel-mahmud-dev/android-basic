@@ -4,13 +4,12 @@ import android.content.Context
 import android.content.SharedPreferences
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import java.util.UUID
 
 data class AuthUser(
     val email: String,
     val username: String,
     val avatar: String,
-    val id: UUID = UUID.randomUUID()
+    val id: String
 )
 
 object AuthPreferences {
