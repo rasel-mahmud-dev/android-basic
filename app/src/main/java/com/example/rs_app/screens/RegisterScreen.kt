@@ -23,7 +23,8 @@ import kotlinx.coroutines.launch
 
 data class FormState2(
     var email: String = "rasel.mahmud.dev@gmail.com",
-    var username: String = "Rasel Mahmud",
+    var firstName: String = "Rasel",
+    var lastName: String = "Mahmud",
     var phone: String = "23456754323435",
     var avatar: String = "https://rasel-portfolio.vercel.app/images/rasel-mahmud-dev.webp",
     var password: String = "123"
@@ -36,7 +37,8 @@ fun RegisterScreen(navController: NavHostController) {
     fun handleChangeValue(name: String, value: String) {
         formState = when (name) {
             "email" -> formState.copy(email = value)
-            "username" -> formState.copy(username = value)
+            "firstName" -> formState.copy(firstName = value)
+            "lastName" -> formState.copy(lastName = value)
             "phone" -> formState.copy(phone = value)
             "avatar" -> formState.copy(avatar = value)
             "password" -> formState.copy(password = value)
@@ -54,7 +56,8 @@ fun RegisterScreen(navController: NavHostController) {
                 phone = formState.phone,
                 password = formState.password,
                 avatar = formState.avatar,
-                username = formState.username
+                firstName = formState.firstName,
+                lastName = formState.lastName
             )
 
             newUser.save()
@@ -103,9 +106,17 @@ fun RegisterScreen(navController: NavHostController) {
             )
 
             CustomTextField(
-                value = formState.username,
-                label = "username",
-                name = "username",
+                value = formState.firstName,
+                label = "firstName",
+                name = "firstName",
+                onValueChange = { name, value -> handleChangeValue(name, value) }
+            )
+
+
+            CustomTextField(
+                value = formState.lastName,
+                label = "lastName",
+                name = "lastName",
                 onValueChange = { name, value -> handleChangeValue(name, value) }
             )
 

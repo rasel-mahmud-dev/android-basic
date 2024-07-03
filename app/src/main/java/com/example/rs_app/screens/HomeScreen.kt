@@ -17,7 +17,23 @@ import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.example.rs_app.AuthPreferences
 import com.example.rs_app.GlobalAuthState
+import com.example.rs_app.http.client
 import com.example.rs_app.utils.NotificationUtil
+import io.ktor.client.HttpClient
+import io.ktor.client.plugins.RedirectResponseException
+import io.ktor.client.request.get
+import io.ktor.client.request.url
+import io.ktor.client.statement.HttpResponse
+import kotlinx.coroutines.launch
+
+import io.ktor.client.*
+import io.ktor.client.engine.cio.*
+import io.ktor.client.plugins.contentnegotiation.*
+import io.ktor.serialization.gson.*
+import com.google.gson.Gson
+import io.ktor.client.call.body
+import io.ktor.util.Hash
+import java.util.Date
 
 
 @Composable
@@ -25,6 +41,22 @@ fun HomeScreen(navController: NavHostController) {
     var authUser = GlobalAuthState.authUser
 
     val context = LocalContext.current
+
+    val coroutineScope = rememberCoroutineScope()
+
+    suspend fun findByEmail(email: String) {
+//        try {
+//            val response: HttpResponse = client.get("http://10.100.10.8:9000/api/v1/authenticator")
+//            if (response.status.value == 200) {
+//                val result: ApiResponse<AuthenticatorModel> = response.body()
+//                println(result.data)
+//            } else {
+//                println("Failed to fetch user. Status code: ${response.status.value}")
+//            }
+//        } catch (e: Exception) {
+//            e.printStackTrace()
+//        }
+    }
 
 
     fun handleLogout() {
@@ -106,6 +138,10 @@ fun HomeScreen(navController: NavHostController) {
 
             }
 
+            Button(onClick = { navController.navigate("authenticator") }) {
+                Text("Authenticator")
+            }
+
             Button(onClick = { sayHiAll() }) {
                 Text("Say Hi All")
             }
@@ -115,8 +151,11 @@ fun HomeScreen(navController: NavHostController) {
             }
 
             Button(onClick = {
-                NotificationUtil.showNotification(context, "sdfj", "sdkuofsdfudskfj dsjkf hdss")
+//                NotificationUtil.showNotification(context, "sdfj", "sdkuofsdfudskfj dsjkf hdss")
 
+                coroutineScope.launch {
+                    findByEmail("rasel.mahmud.dev@gmail.com")
+                }
             }) {
                 Text("Show Not")
             }

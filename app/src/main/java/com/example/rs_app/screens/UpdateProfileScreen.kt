@@ -63,15 +63,15 @@ fun UpdateProfileScreen(navController: NavHostController, userId: String) {
         coroutineScope.launch {
             try {
                 val result = UserModel.findById(userId)
-                if (result != null) {
-                    formState = formState.copy(
-                        email = result.email,
-                        phone = result.phone,
-                        avatar = result.avatar,
-                        username = result.username,
-//                        password = result.password,
-                    )
-                }
+//                if (result != null) {
+//                    formState = formState.copy(
+//                        email = result.email,
+//                        phone = result.phone,
+//                        avatar = result.avatar,
+//                        username = result.username,
+////                        password = result.password,
+//                    )
+//                }
             } catch (e: Exception) {
                 println("Error adding user: ${e.message}")
             }
@@ -88,28 +88,28 @@ fun UpdateProfileScreen(navController: NavHostController, userId: String) {
     val context = LocalContext.current
     suspend fun handleUpdateUser() {
         try {
-            val user = UserModel.update(
-                userId, mapOf(
-                    "email" to formState.email,
-                    "phone" to formState.phone,
-                    "password" to formState.password,
-                    "avatar" to formState.avatar,
-                    "username" to formState.username
-                )
-            )
-
-            if (user != null) {
-                Toast.makeText(context, "User update successfully", Toast.LENGTH_SHORT).show()
-                val a = AuthUser(
-                    email = user.email,
-                    id = user.id,
-                    username = user.username,
-//                    phone = user.phone,
-                    avatar = user.avatar,
-                )
-                GlobalAuthState.authUser = a
-                AuthPreferences.saveAuthUser(context, a)
-            }
+//            val user = UserModel.update(
+//                userId, mapOf(
+//                    "email" to formState.email,
+//                    "phone" to formState.phone,
+//                    "password" to formState.password,
+//                    "avatar" to formState.avatar,
+//                    "username" to formState.username
+//                )
+//            )
+//
+//            if (user != null) {
+//                Toast.makeText(context, "User update successfully", Toast.LENGTH_SHORT).show()
+//                val a = AuthUser(
+//                    email = user.email,
+//                    id = user.id,
+//                    username = user.username,
+////                    phone = user.phone,
+//                    avatar = user.avatar,
+//                )
+//                GlobalAuthState.authUser = a
+//                AuthPreferences.saveAuthUser(context, a)
+//            }
         } catch (e: Exception) {
             coroutineScope.launch {
                 Toast.makeText(context, e.message.toString(), Toast.LENGTH_SHORT)

@@ -36,6 +36,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.ui.unit.dp
 import androidx.core.app.NotificationCompat
+import com.example.rs_app.screens.AuthenticatorScreen
 import com.example.rs_app.utils.NotificationUtil
 
 
@@ -85,7 +86,7 @@ class MainActivity : ComponentActivity() {
 
                 NavHost(
                     navController = navController,
-                    startDestination = "home"
+                    startDestination = "authenticator"
                 ) {
                     composable("home") { entry ->
 //                        val text = entry.savedStateHandle.get<String>("my_text")
@@ -100,6 +101,10 @@ class MainActivity : ComponentActivity() {
 
                     composable("messages") {
                         MessagesScreen(navController, applicationContext)
+                    }
+
+                    composable("authenticator") {
+                        AuthenticatorScreen(navController, applicationContext)
                     }
 
 
@@ -166,8 +171,8 @@ fun LoadAuthInfo() {
             if (authUser != null) {
                 GlobalAuthState.authUser = authUser
             } else {
-                GlobalAuthState.authUser = authUser
-                print("Please login...")
+//                GlobalAuthState.authUser = authUser
+//                print("Please login...")
             }
         }
     }

@@ -62,14 +62,14 @@ fun LoginScreen(navController: NavHostController) {
         try {
             val user = UserModel.findByEmail(email)
             if (user != null) {
-                val authUser = AuthUser(
-                    email = user.email,
-                    username = user.username,
-                    avatar = user.avatar,
-                    id = user.id
-                )
-                GlobalAuthState.authUser = authUser
-                AuthPreferences.saveAuthUser(context, authUser)
+//                val authUser = AuthUser(
+//                    email = user.email,
+//                    firstName = user.firstName,
+//                    avatar = user.avatar,
+//                    id = user.id
+//                )
+//                GlobalAuthState.authUser = authUser
+//                AuthPreferences.saveAuthUser(context, authUser)
 
                 println("User logged in: ${GlobalAuthState.authUser}")
                 navController.navigate("home")

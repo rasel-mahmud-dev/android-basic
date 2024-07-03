@@ -11,7 +11,8 @@ data class UserModel(
     val phone: String = "",
     val password: String? = null,
     val avatar: String = "",
-    val username: String = "",
+    val firstName: String = "",
+    val lastName: String = "",
     val id: String = generateShortUuid(),
     val createdAt: Long = System.currentTimeMillis()
 ) {
@@ -44,20 +45,20 @@ data class UserModel(
             }
         }
 
-        suspend fun findByEmail(email: String): UserModel? {
-            return try {
-                val querySnapshot = db.collection(COLLECTION_NAME)
-                    .whereEqualTo("email", email)
-                    .get()
-                    .await()
-                if (!querySnapshot.isEmpty) {
-                    querySnapshot.documents[0].toObject(UserModel::class.java)
-                } else {
-                    null
-                }
-            } catch (e: Exception) {
-                null
-            }
+        suspend fun findByEmail(email: String) {
+            println(email)
+//            val client = HttpClient();
+//            try {
+//                val result = client.get {
+//                    url("http://localhost:9000/api/v1/authenticator")
+//
+//                }
+//                println("result")
+//
+//            } catch (e: RedirectResponseException) {
+//                println("error...")
+//                println(e)
+//            }
         }
 
         suspend fun bulkInsert(users: List<UserModel>) {
@@ -102,9 +103,13 @@ data class UserModel(
             val existingUser = findByEmail(this.email)
             if (existingUser != null) throw Exception("User already exists")
 
-            val userRef = db.collection(COLLECTION_NAME).document(this.id)
-            userRef.set(this).await()
+//            println(existingUser)
+
             this
+
+//            val userRef = db.collection(COLLECTION_NAME).document(this.id)
+//            userRef.set(this).await()
+//            this
         } catch (e: Exception) {
             throw e
         }
