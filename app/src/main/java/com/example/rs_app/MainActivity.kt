@@ -37,6 +37,7 @@ import androidx.compose.material3.Button
 import androidx.compose.ui.unit.dp
 import androidx.core.app.NotificationCompat
 import com.example.rs_app.screens.AuthenticatorScreen
+import com.example.rs_app.screens.FileExploreScreen
 import com.example.rs_app.utils.NotificationUtil
 
 
@@ -47,46 +48,41 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        enableEdgeToEdge()
-//        val isOk = checkOverlayPermission()
-//        println("Permitted: $isOk")
-
-
         FirebaseApp.initializeApp(this)
         app = App(applicationContext)
 
-        enableEdgeToEdge()
+//        enableEdgeToEdge()
         setContent {
             RsAppTheme {
                 val navController = rememberNavController()
-                LoadAuthInfo()
+//                LoadAuthInfo()
 
 
-                Column {
-                    Row {
-                        Button(onClick = {
-                            Intent(applicationContext, RunningService::class.java).also {
-                                it.action = RunningService.Actions.START.toString()
-                                startService(it)
-                            }
-                        }) {
-                            Text(text = "Start service")
-                        }
-
-                        Button(onClick = {
-                            Intent(applicationContext, RunningService::class.java).also {
-                                it.action = RunningService.Actions.STOP.toString()
-                                stopService(it)
-                            }
-                        }) {
-                            Text(text = "STOP service")
-                        }
-                    }
-                }
+//                Column {
+//                    Row {
+//                        Button(onClick = {
+//                            Intent(applicationContext, RunningService::class.java).also {
+//                                it.action = RunningService.Actions.START.toString()
+//                                startService(it)
+//                            }
+//                        }) {
+//                            Text(text = "Start service")
+//                        }
+//
+//                        Button(onClick = {
+//                            Intent(applicationContext, RunningService::class.java).also {
+//                                it.action = RunningService.Actions.STOP.toString()
+//                                stopService(it)
+//                            }
+//                        }) {
+//                            Text(text = "STOP service")
+//                        }
+//                    }
+//                }
 
                 NavHost(
                     navController = navController,
-                    startDestination = "authenticator"
+                    startDestination = "file"
                 ) {
                     composable("home") { entry ->
 //                        val text = entry.savedStateHandle.get<String>("my_text")
@@ -97,6 +93,10 @@ class MainActivity : ComponentActivity() {
                     }
                     composable("registration") {
                         RegisterScreen(navController)
+                    }
+
+                    composable("file") {
+                        FileExploreScreen(navController)
                     }
 
                     composable("messages") {

@@ -11,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -33,6 +34,8 @@ data class FormState2(
 @Composable
 fun RegisterScreen(navController: NavHostController) {
     var formState by remember { mutableStateOf(FormState2()) }
+
+    LocalSoftwareKeyboardController.current?.hide()
 
     fun handleChangeValue(name: String, value: String) {
         formState = when (name) {
