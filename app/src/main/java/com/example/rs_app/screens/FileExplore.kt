@@ -24,6 +24,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -32,7 +33,23 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.rs_app.apis.BASE_URL
+import com.example.rs_app.http.client
+import io.ktor.client.plugins.HttpRequestTimeoutException
+import io.ktor.client.request.forms.formData
+import io.ktor.client.request.forms.submitFormWithBinaryData
+import io.ktor.client.request.get
+import io.ktor.client.request.post
+import io.ktor.client.statement.HttpResponse
+import io.ktor.client.statement.bodyAsText
+import io.ktor.client.utils.EmptyContent.contentType
+import io.ktor.http.ContentType
+import io.ktor.http.Headers
+import io.ktor.http.HttpHeaders
+import android.content.Context
+import kotlinx.coroutines.launch
 import java.io.File
+import java.net.ConnectException
 
 data class FileFolder(
     val name: String = "",
@@ -60,6 +77,7 @@ fun FileExploreScreen(n: NavHostController) {
     var hasPermission by remember { mutableStateOf(false) }
 
 
+
     val directoryContents = remember { mutableStateListOf<FileFolder>() }
     val selectedForSync = remember { mutableStateListOf<String>() }
     val prevPath = remember { mutableStateOf("/storage/emulated/0/") }
@@ -67,6 +85,8 @@ fun FileExploreScreen(n: NavHostController) {
     val aFile = "/storage/emulated/0/Android"
 
     val localContext = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
+
 
 //    val permissionLauncher = rememberLauncherForActivityResult(
 //        contract = ActivityResultContracts.RequestPermission()
@@ -112,6 +132,24 @@ fun FileExploreScreen(n: NavHostController) {
 //        Os.remove("")
     }
 
+    suspend fun uploadFile(filePath: String, url: String) {
+        val file = File(filePath)
+
+        val response: HttpResponse = client.submitFormWithBinaryData(
+            url = url,
+            formData = formData {
+                append(
+                    key = "file",
+                    value = file.readBytes(),
+                    headers = Headers.build {
+                        append(HttpHeaders.ContentDisposition, "filename=${file.name}")
+                    }
+                )
+            }
+        )
+        println("Response status: ${response.status}")
+        println("Response: ${response.bodyAsText()}")
+    }
 
     Box(
         modifier = Modifier
@@ -126,12 +164,55 @@ fun FileExploreScreen(n: NavHostController) {
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Button(onClick = {
-                    if (selectedForSync.count() == directoryContents.count()) {
+                    coroutineScope.launch {
+                        try {
+                            val url = "http://192.168.0.110:3000/upload"
+                            val fileName = "text.txt"
+                            localContext.assets.open(fileName).use { inputStream ->
+                                val fileContent = inputStream.readBytes()
+                                val response: HttpResponse = client.submitFormWithBinaryData(
+                                    url = url,
+                                    formData = formData {
+                                        append(
+                                            key = "file",
+                                            value = fileContent,
+                                            headers = Headers.build {
+                                                append(HttpHeaders.ContentDisposition, "filename=$fileName")
+                                            }
+                                        )
+                                    }
+                                )
+                                println("Response status: ${response.status}")
+                                println("Response: ${response.bodyAsText()}")
+                            }
+
+                            // Read the file as bytes and print them
+//                            val bytes = file.readBytes()
+//                            println("File contents as bytes: ${bytes.joinToString(",")}")
+//
+//                            // Read the file as a string and print it
+//                            val content = file.readText()
+//                            println("File contents as text: $content")
+//                            uploadFile(file, "http://192.168.0.110:3000/upload")
+//                            val response: HttpResponse =
+//                                client.get(urlString = "http://192.168.0.110:3000/ping") {
+//                                    contentType(ContentType.Application.Json)
+//                                }
+                            println("--------------")
+//                            println(response.status)
+
+                        } catch (e: Exception) {
+                            println("Unexpected error: ${e.message}")
+                        }
+
+                        if (selectedForSync.count() == directoryContents.count()) {
 //                    selectedForSync.removeAll(selectedForSync)
-                        selectedForSync.clear()
-                    } else {
+                            selectedForSync.clear()
+                        } else {
 //                    selectedForSync.addAll(directoryContents)
+                        }
                     }
+
                 }) {
                     Text(text = "Select All")
                 }
