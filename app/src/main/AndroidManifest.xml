@@ -6,6 +6,7 @@
 
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
@@ -33,6 +34,7 @@
         </activity>
 
         <service android:name=".RunningService" />
+        <service android:name=".OverlayService" />
         <service android:name=".TouchService"
             android:foregroundServiceType="location"
             tools:ignore="ForegroundServicePermission" />

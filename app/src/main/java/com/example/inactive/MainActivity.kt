@@ -6,8 +6,11 @@ import TouchService
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.SharedPreferences
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.SystemClock
+import android.provider.Settings
 import android.util.Log
 import android.view.MotionEvent
 import androidx.activity.ComponentActivity
@@ -40,15 +43,25 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(this)) {
+            val intent = Intent(
+                Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                Uri.parse("package:$packageName")
+            )
+            startActivityForResult(intent, 100)
+        } else {
+            // Start the overlay service if permission is granted
+            startOverlayService()
+        }
+
         enableEdgeToEdge()
         setContent {
             InactiveTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     Column {
                         RsButton(modifier = Modifier.padding(innerPadding), onClick = {
-                            val startServiceIntent =
-                                Intent(applicationContext, MyBackgroundService::class.java)
-                            startService(startServiceIntent)
+                            startOverlayService()
                             Log.d("MainActivity", "Background task started")
                         }, {
                             Text("Start background task")
@@ -79,9 +92,12 @@ class MainActivity : ComponentActivity() {
         sharedPreferences = getSharedPreferences("TouchData", MODE_PRIVATE)
 
         // Automatically start the background service here instead of using a button
-        startBackgroundServices()
+//        startBackgroundServices()
     }
-
+    private fun startOverlayService() {
+        val intent = Intent(this, OverlayService::class.java)
+        startService(intent)
+    }
     private fun startBackgroundServices() {
         // Start RunningService
         Intent(applicationContext, RunningService::class.java).also {
